@@ -51,6 +51,21 @@ header h1{font-size:1.3rem;font-weight:700;text-align:center;position:absolute;l
 .cancel-btn{margin-top:12px;padding:10px 16px;border:none;background:#ccc;color:#111;border-radius:10px;cursor:pointer;font-weight:600}
 .cancel-btn:hover{background:#bbb}
 
+/* 🔄 Loading Spinner */
+.loading-spinner {
+  border: 4px solid #eee;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @media(max-width:420px){.coins-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -59,7 +74,7 @@ header h1{font-size:1.3rem;font-weight:700;text-align:center;position:absolute;l
 
 <div class="header-left">
 <img src="daidien2.png" alt="avatar" class="logo" style="width:20px;height:20px;border-radius:50%;" />
-<span class="tiktok-username">meddii_saj</span>
+<span class="tiktok-username">meddiisaj</span>
 <a href="#" class="history-link">View Reward log</a>
 </div>
 
@@ -73,7 +88,7 @@ header h1{font-size:1.3rem;font-weight:700;text-align:center;position:absolute;l
 </div>
 
 <div class="input-section">
-  <input id="tiktokId" type="text" placeholder=""/>
+  <input id="tiktokId" type="text" placeholder="Enter username"/>
 </div>
 
 <div class="coins-grid" id="coinGrid"></div>
@@ -112,11 +127,15 @@ header h1{font-size:1.3rem;font-weight:700;text-align:center;position:absolute;l
       <div class="payment-option" data-method="PayPal">💳 <span>PayPal Option</span></div>
     </div>
 
-    <p style="font-size:0.8rem;color:#777;margin-top:10px;text-align:center;">
-      
-    </p>
-
     <button id="cancelSummary" class="cancel-btn" style="margin-top:14px;width:100%;">Back</button>
+  </div>
+</div>
+
+<!-- ✅ Loading / Processing Overlay -->
+<div id="loadingOverlay" class="overlay" aria-hidden="true">
+  <div class="panel" style="text-align:center;">
+    <div class="loading-spinner"></div>
+    <div style="font-weight:600;font-size:1.1rem;">Processing...</div>
   </div>
 </div>
 
@@ -175,7 +194,9 @@ const successText=document.getElementById('successText');
 const backBtn=document.getElementById('backBtn');
 
 proceedBtn.onclick=()=>{
+  const tiktokId=document.getElementById('tiktokId');
   if(!selectedPackage){alert('Please select a coin package first.');return;}
+  if(!tiktokId.value.trim()){alert('Please enter your TikTok username first.');return;}
   document.getElementById('summaryPackage').textContent=`${selectedPackage.amount} Coins`;
   document.getElementById('summaryTotal').textContent=`$${usdFormat(selectedPackage.price)}`;
   orderSummaryOverlay.classList.add('show');
@@ -183,18 +204,25 @@ proceedBtn.onclick=()=>{
 
 cancelSummary.onclick=()=>{orderSummaryOverlay.classList.remove('show');};
 
+/* 🔄 Payment process with loading effect */
 paymentChoices.forEach(opt=>{
   opt.onclick=()=>{
     const method=opt.getAttribute('data-method');
     orderSummaryOverlay.classList.remove('show');
-    totalCoins-=selectedPackage.amount;
-    updateTotalsUI();
-    successText.innerHTML=`
-      You selected <b>${method}</b> and confirmed order for 
-      <b>${selectedPackage.amount.toLocaleString()}</b> coins ($${usdFormat(selectedPackage.price)}).<br><br>
 
-    `;
-    successOverlay.classList.add('show');
+    const loadingOverlay=document.getElementById('loadingOverlay');
+    loadingOverlay.classList.add('show');
+
+    setTimeout(()=>{
+      loadingOverlay.classList.remove('show');
+      totalCoins-=selectedPackage.amount;
+      updateTotalsUI();
+      successText.innerHTML=`
+        You selected <b>${method}</b> and confirmed order for 
+        <b>${selectedPackage.amount.toLocaleString()}</b> coins ($${usdFormat(selectedPackage.price)}).<br><br>
+      `;
+      successOverlay.classList.add('show');
+    },1000);
   };
 });
 
