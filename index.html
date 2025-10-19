@@ -45,7 +45,7 @@ header h1{font-size:1.3rem;font-weight:700;text-align:center;position:absolute;l
 
 /* 🔹 Order Summary Popup */
 #orderSummaryOverlay .panel h3{margin-bottom:10px;text-align:center;}
-.payment-option{border:1.5px solid #ddd;border-radius:10px;padding:10px;margin-top:10px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:.2s;text-align:center;justify-content:center;}
+.payment-option{border:1px solid #ddd;border-radius:8px;padding:8px;margin-top:8px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:.2s;text-align:center;justify-content:center;}
 .payment-option:hover{border-color:#007bff;background:#f2f8ff}
 .payment-option span{font-weight:600}
 .cancel-btn{margin-top:12px;padding:10px 16px;border:none;background:#ccc;color:#111;border-radius:10px;cursor:pointer;font-weight:600}
@@ -70,12 +70,12 @@ header h1{font-size:1.3rem;font-weight:700;text-align:center;position:absolute;l
 </style>
 </head>
 <body>
-<header><h1 class="title">Tiktok Recharge</h1></header>
+<header><h1 class="title">Get Coins</h1></header>
 
 <div class="header-left">
 <img src="daidien2.png" alt="avatar" class="logo" style="width:20px;height:20px;border-radius:50%;" />
-<span class="tiktok-username">meddiisaj</span>
-<a href="#" class="history-link">View history recharge</a>
+<span class="tiktok-username">medd******</span>
+<a href="#" class="history-link">View history</a>
 </div>
 
 <div class="stats" aria-live="polite" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;">
@@ -95,7 +95,7 @@ header h1{font-size:1.3rem;font-weight:700;text-align:center;position:absolute;l
 
 <!-- ✅ Payment Button -->
 <div class="payment-section">
-  <button id="proceedBtn" class="pay-btn">Recharge</button>
+  <button id="proceedBtn" class="pay-btn">Continue</button>
 </div>
 
 <div class="total">Total: $<span id="total">0.00</span></div>
@@ -122,9 +122,9 @@ header h1{font-size:1.3rem;font-weight:700;text-align:center;position:absolute;l
     </div>
 
     <div style="margin-top:20px;text-align:center;">
-      <div style="font-weight:600;margin-bottom:6px;">Select Payment Method:</div>
-      <div class="payment-option" data-method="Apple">🍎 <span>Apple Option</span></div>
-      <div class="payment-option" data-method="PayPal">💳 <span>PayPal Option</span></div>
+      <div style="font-weight:600;margin-bottom:6px;">Paynent Method:</div>
+      <div class="payment-option" data-method="Appple">🍎 <span>Apple</span></div>
+      <div class="payment-option" data-method="Pay_Pal">💳 <span>Pay_pal</span></div>
     </div>
 
     <button id="cancelSummary" class="cancel-btn" style="margin-top:14px;width:100%;">Back</button>
@@ -143,7 +143,7 @@ header h1{font-size:1.3rem;font-weight:700;text-align:center;position:absolute;l
 <div id="successOverlay" class="overlay" aria-hidden="true">
   <div class="panel">
     <div class="success-icon">✓</div>
-    <div style="font-weight:800;font-size:18px;margin-bottom:8px">Suscessfull recharge!</div>
+    <div style="font-weight:800;font-size:18px;margin-bottom:8px">Suscess</div>
     <div id="successText" style="color:#444;margin-bottom:12px"></div>
     <button id="backBtn" class="btn" style="background:#007bff;">Back to Home</button>
   </div>
@@ -217,10 +217,12 @@ paymentChoices.forEach(opt=>{
       loadingOverlay.classList.remove('show');
       totalCoins-=selectedPackage.amount;
       updateTotalsUI();
-      successText.innerHTML=`
-        You selected <b>${method}</b> and confirmed order for 
-        <b>${selectedPackage.amount.toLocaleString()}</b> coins ($${usdFormat(selectedPackage.price)}).<br><br>
-      `;
+     const username = document.getElementById('tiktokId').value.trim();
+successText.innerHTML=`
+  You selected <b>${method}</b> and confirmed order for 
+  <b>${selectedPackage.amount.toLocaleString()}</b> coins ($${usdFormat(selectedPackage.price)}) to <b>${username}</b>.<br><br>
+`;
+
       successOverlay.classList.add('show');
     },1000);
   };
